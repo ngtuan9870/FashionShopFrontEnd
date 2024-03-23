@@ -4,3 +4,16 @@
     padding: 20px;
     border-radius: 10px;
   }
+  .background-auth{
+    background-image: url(../../../assets/auth-wallpaper.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+  }
+  .background-auth .container{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
