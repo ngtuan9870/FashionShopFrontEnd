@@ -1,0 +1,6 @@
+.topbar {
+    position: fixed; /* Đảm bảo topbar luôn ở trên cùng */
+    top: 0; /* Đặt top bar ở vị trí trên cùng của trang */
+    width: 100%; /* Chiều rộng của topbar */
+    z-index: 1000; /* Đảm bảo topbar nằm trên cùng */
+}

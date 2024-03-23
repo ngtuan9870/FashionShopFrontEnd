@@ -1,0 +1,12 @@
+.sidebar {
+    background-color: #333;
+    color: white;
+    height: 100vh; /* chiều cao tối đa */
+    overflow-y: auto; /* Disable cuộn trong sidebar */
+    padding-top: 56px;
+}
+.content {
+    height: 100vh;
+    overflow-y: auto; /* Cho phép cuộn nội dung nếu nội dung vượt quá kích thước */
+    padding-top: 56px; /* padding-top bằng chiều cao của topbar */
+}
