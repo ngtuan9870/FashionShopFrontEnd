@@ -11,7 +11,7 @@
                 <!-- Phần email -->
                 <div class="form-group">
                   <label for="email">Nhập địa chỉ Email</label>
-                  <input #emailInput="ngModel" class="form-control" type="email" id="email" name="email" minlength="4" [(ngModel)]="user.user_email"  required email (focusout)="checkEmail()" (keyup)="clearExistsMail()">
+                  <input #emailInput="ngModel" class="form-control" type="email" id="email" name="email" minlength="4" [(ngModel)]="user.email"  required email (focusout)="checkEmail()" (keyup)="clearExistsMail()">
                   <div class="error-message" *ngIf="emailInput.invalid&&(emailInput.dirty||emailInput.touched)">
                     <div *ngIf="emailInput.errors['required']">
                       <span>Email là trường bắt buộc!</span>
@@ -27,7 +27,7 @@
                 <!-- Phần password -->
                 <div class="form-group">
                   <label for="password">Nhập mật khẩu</label>
-                  <input type="password" class="form-control" id="password" [(ngModel)]="user.user_password" name="password" #checkPassword="ngModel" required minlength="8">
+                  <input type="password" class="form-control" id="password" [(ngModel)]="user.password" name="password" #checkPassword="ngModel" required minlength="8">
                   <div class="error-message" *ngIf="checkPassword.invalid&&(checkPassword.dirty||checkPassword.touched)">
                     <div *ngIf="checkPassword.errors['required']">
                       <span>Mật khẩu là trường bắt buộc!</span>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Nhập số điện thoại</label>
-                    <input type="number" class="form-control" id="phone" name="phone" [(ngModel)]="user.user_phone" #checkPhone="ngModel" minlength="10">
+                    <input type="number" class="form-control" id="phone" name="phone" [(ngModel)]="user.phone" #checkPhone="ngModel" minlength="10">
                     <div class="error-message" *ngIf="checkPhone.invalid&&(checkPhone.dirty||checkPhone.touched)">
                       <div *ngIf="checkPhone.errors['minlength']">
                         <span>Số điện thoại phải có 10 ký tự!</span>

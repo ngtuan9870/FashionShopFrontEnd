@@ -9,4 +9,11 @@ function showSwal(type,message) {
       })
    }
 }
+var element = document.getElementById("loading");
+function hideLoading() {
+   element.style.display = "none";
+}
+function showLoading() {
+   element.style.display = "block";
+}
 

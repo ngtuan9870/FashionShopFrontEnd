@@ -1,0 +1,95 @@
+@media (min-width : 992px) {
+    .offcanvas {
+      visibility      : visible;
+      position        : relative;
+      background      : none;
+      border          : none;
+      justify-content : end;
+      color           : red;
+    }
+    .navbar-nav li a {
+        color: black !important;
+    }
+    .navbar-nav li{
+        transition: background-color 0.3s ease;
+    }
+    .navbar-nav li:hover{
+        background-color: white;
+    }
+    .search-part{
+        display: inline-block;
+    }
+  }
+  @media (max-width : 992px) {
+    .offcanvas {
+      width : 250px !important;
+    }
+    .bg-offcanvas{
+        background-color: rgba(0, 0, 0, 0.897);
+    }
+    .offcanvas-start-lg {
+      top          : 0;
+      left         : 0;
+      border-right : 1px solid rgba(0, 0, 0, .2);
+      transform    : translateX(-100%);
+    }
+    .navbar-nav li a {
+        color: white !important;
+    }
+    .search-part{
+        display: none;
+    }
+  }
+.userinfo{
+    position: absolute;
+    right: 0;
+}
+.userinfo a{
+    padding: 10px;
+    color: black;
+}
+.userinfo input{
+    width: 150px;
+    border: none;
+    background: none;
+    outline: none;
+}
+.search-part{
+    border-bottom: 1px solid black;
+    margin-right: 10px;
+}
+.search-button {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 70%;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+@keyframes appear {
+    from {
+      transform: translateY(50%);
+      opacity: 0;
+
+    }
+    to {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+  }
+.dialog {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    animation: appear 0.5s ease;
+}
+ul{
+    list-style: none;
+}
+.nav-link:hover + .dialog{
+    display: block;
+}

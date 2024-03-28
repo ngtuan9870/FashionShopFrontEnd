@@ -1,8 +1,8 @@
 export class User {
-    user_id:any = "";
-    user_name:any = "";
-    user_password:any = "";
-    user_email:any = "";
-    user_phone:any = "";
-    user_level:any = "";
+    id:any = "";
+    name:any = "";
+    password:any = "";
+    email:any = "";
+    phone:any = "";
+    level:any = "";
 }

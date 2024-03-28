@@ -1,8 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from 'src/app/models/product.model';
 import { User } from 'src/app/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { ShowService } from 'src/app/services/show.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -10,31 +14,33 @@ import { User } from 'src/app/models/user.model';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  private baseUrl = "https://localhost:7049/api/auth";
   public allUsers = new BehaviorSubject<User[]>(null as any);
   public user:User = new User();
-  constructor(private http:HttpClient) { }
+  constructor(private authService:AuthService, private showService:ShowService, private tokenService:TokenService, private router:Router) { }
 
   ngOnInit(): void {
-    // this.getAllUser();
   }
 
-  public getAllUser(){
-    this.http.get(this.baseUrl).subscribe(res=>{
-      var r:any = res;
-      this.allUsers.next(r);
-    });
-    console.log(this.allUsers);
-    return;
+  public login(){
+    this.showService.showLoading()
+    let fd = new FormData()
+    fd.append('email', this.user.email);
+    fd.append('password', this.user.password);
+    this.authService.login(fd).subscribe(
+      res=>{
+        this.showService.hideLoading()
+        this.handResponse(res);
+        this.showService.showSwal("auto-close","Đăng nhập thành công!");
+      },error=>{
+        this.showService.hideLoading()
+        this.showService.showSwal("auto-close","Tên đăng nhập hoặc mật khẩu không đúng");
+      }
+    );
   }
-  public addUser(){
-    return this.http.post(this.baseUrl, this.user);
-  }
-  public deleteUser(id:any){
-    return this.http.delete(this.baseUrl, id);
-  }
-  public editUser(form:any){
-    return this.http.put(this.baseUrl, form);
+  public handResponse(res){
+    this.tokenService.handle(res.access_token);
+    this.authService.changeAuthStatus(true);
+    return this.router.navigateByUrl("/")
   }
 
 }

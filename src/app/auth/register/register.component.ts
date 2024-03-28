@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-declare function showSwal(type,message):any;
+import { ShowService } from 'src/app/services/show.service';
 
 @Component({
   selector: 'app-register',
@@ -16,19 +16,19 @@ export class RegisterComponent implements OnInit {
   public re_password:any = "";
   public error_email_exists = false;
 
-  constructor(private authService:AuthService, private router:Router) { }
+  constructor(private authService:AuthService, private router:Router, private showService:ShowService) { }
 
   ngOnInit(): void {
   }
 
   public register(){
     let fd = new FormData()
-    fd.append('user_email', this.user.user_email);
-    fd.append('user_password', this.user.user_password);
-    fd.append('user_phone', this.user.user_phone);
+    fd.append('email', this.user.email);
+    fd.append('password', this.user.password);
+    fd.append('phone', this.user.phone);
     this.authService.register(fd).subscribe(
       res=>{
-        showSwal('auto-close','Đăng ký thành công');
+        this.showService.showSwal('auto-close','Đăng ký thành công');
         this.router.navigate(['../auth']);
        },error=>{
          console.log(error.error.error);
@@ -36,8 +36,7 @@ export class RegisterComponent implements OnInit {
     );
   }
   public checkEmail(){
-    showSwal('auto-close','Đăng ký thành công');
-    this.authService.checkEmail(this.user.user_email).subscribe(
+    this.authService.checkEmail(this.user.email).subscribe(
       res=>{
         if(res['message']=='fail'){
           this.error_email_exists = true;
@@ -54,7 +53,7 @@ export class RegisterComponent implements OnInit {
     this.error_email_exists = false;
   }
   public issamepassword(){
-    if(this.user.user_password!=this.re_password){
+    if(this.user.password!=this.re_password){
       return true;
     }
     return false
