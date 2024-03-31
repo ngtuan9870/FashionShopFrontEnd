@@ -4,8 +4,8 @@ export class Product {
     price:any = "";
     image:any = "";
     description:any = "";
-    waranty:any = "";
-    accessories:any = "";
+    waranty:any = null;
     condition:any = "";
-    featured:any = "";
+    featured:any = null;
+    category_id = null;
 }

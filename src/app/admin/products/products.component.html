@@ -1,5 +1,5 @@
 <div>
-    <a type="button" class="btn btn-success btn-product"><i class="fa-solid fa-plus"></i> Thêm sản phẩm</a>
+    <a type="button" class="btn btn-success btn-product" data-bs-toggle="modal" data-bs-target="#addProductModal" ><i class="fa-solid fa-plus"></i> Thêm sản phẩm</a>
     <!-- <button class="btn-success">Xóa nhiều sản phẩm</button> -->
     <a type="button" class="btn btn-danger btn-product"><i class="fa-regular fa-file"></i> Xuất ra excel</a>
 </div>
@@ -10,23 +10,186 @@
             <th scope="col">Ảnh</th>
             <th scope="col">Tên thời trang</th>
             <th scope="col">Giá</th>
-            <th scope="col">Khuyến mãi</th>
+            <th scope="col">Mô tả</th>
             <th scope="col">Tình trạng</th>
             <th scope="col">Còn hàng</th>
             <th scope="col">Thao tác</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-          </tr>
-          
+        <div *ngIf = "products.length == 0">
+          <h1 class="error-message">Hiện không có sản phẩm nào!</h1>
+        </div>
+        <tr *ngFor="let p of products; let i = index">
+            <th scope="row">{{p.id}}</th>
+            <td><img src="{{p.image}}" alt="" width="50px" height="50px"></td>
+            <td>{{p.name}}</td>
+            <td>{{p.price}}</td>
+            <td>{{p.description}}</td>
+            <td>{{p.condition}}</td>
+            <td>
+              <span *ngIf="p.featured=='true'"> Còn hàng</span>
+              <span *ngIf="p.featured=='false'"> Hết hàng</span>
+            </td>
+            <td>
+              <a type="button" (click)="getProduct(p)" class="btn btn-warning btn-product" data-bs-toggle="modal" data-bs-target="#editProductModal" ><i class="fa-solid fa-pen-to-square"></i></a>
+              <a type="button" (click)="deleteProduct(p.id)" class="btn btn-danger btn-product"><i class="fa-solid fa-x"></i></a>
+            </td>
+        </tr>
     </tbody>
 </table>
+<!-- Phần thêm sản phẩm -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addProductModalLabel">Thêm sản phẩm</h1><span class="error-message" style="margin-left:10px"> (*) là trường bắt buộc</span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form #addProductForm="ngForm">
+          <div class="mb-3" style="display: flex;">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="product-name" class="col-form-label">Tên thời trang: <span class="error-message">(*)</span></label>
+                <input required type="text" class="form-control" id="product-name" placeholder="Tên thời trang" [(ngModel)]="this.product.name" #checkName = "ngModel" name="checkName">
+                <div class="error-message" *ngIf="checkName.invalid&&(checkName.dirty||checkName.touched)">
+                    <div *ngIf="checkName.errors['required']">
+                      <span>Tên là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <label for="product-price" class="col-form-label">Giá sản phẩm:<span class="error-message">(*)</span></label>
+                <input type="number" class="form-control" id="product-price" placeholder="Giá thời trang" required [(ngModel)]="this.product.price" #checkPrice = "ngModel" name="checkPrice">
+                <div class="error-message" *ngIf="checkPrice.invalid&&(checkPrice.dirty||checkPrice.touched)">
+                    <div *ngIf="checkPrice.errors['required']">
+                      <span>Giá là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="mb-3" style="display: flex;">
+            <div style="flex: 20; margin-right: 10px;">
+                <label for="recipient-name" class="col-form-label">Hình ảnh:<span class="error-message">(*)</span></label>
+                <input type="file" class="d-none" #imgfile (change)="onSelect($event)" name="checkImage" required>
+                <img id="imgPreview" class="form-control img-icon" src="../../../assets/img/logo.png" alt="" (click)="imgfile.click()">
+                <div class="error-message" *ngIf="!fileSelected && imgfile.files">
+                    <span>Hình ảnh là bắt buộc!</span>
+                </div>
+            </div>
+            <div style="flex: 80;">
+                <label for="message-text" class="col-form-label">Mô tả sản phẩm:<span class="error-message">(*)</span></label>
+                <textarea class="form-control" id="message-text" style="height:150px;"  required [(ngModel)]="this.product.description" #checkDescription = "ngModel" name="checkDescription"></textarea>
+                <div class="error-message" *ngIf="checkDescription.invalid&&(checkDescription.dirty||checkDescription.touched)">
+                    <div *ngIf="checkDescription.errors['required']">
+                      <span>Mô tả là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="mb-3" style="display: flex;">
+            <div style="flex: 3; margin-right: 10px;">
+                <label for="product-name" class="col-form-label">Tình trạng thời trang:<span class="error-message">(*)</span></label>
+                <input type="text" class="form-control" id="product-name" placeholder="Tình trạng thời trang" required [(ngModel)]="this.product.condition" #checkCondition = "ngModel" name="checkCondition">
+                <div class="error-message" *ngIf="checkCondition.invalid&&(checkCondition.dirty||checkCondition.touched)">
+                    <div *ngIf="checkCondition.errors['required']">
+                      <span>Tình trạng là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 3; margin-right: 10px;">
+                <label for="product-name" class="col-form-label">Bảo hành bao lâu:</label>
+                <input type="text" class="form-control" id="product-waranty" placeholder="Thời gian bảo hành" [(ngModel)]="this.product.waranty" name="checkWaranty">
+            </div>
+            <div style="flex: 1; display: flex; flex-wrap: wrap;">
+                <label for="product-name" class="col-form-label" style="flex-basis: 100%;">Còn hàng:</label>
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" style="width: 20px; height: 20px;" [(ngModel)]="this.product.featured" name="checkFeatured">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button [disabled]="!addProductForm.valid||!fileSelected && imgfile.files" type="button" class="btn btn-primary" (click)="addProduct()">Thêm sản phẩm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Phần sửa sản phẩm -->
+<div class="modal fade" id="editProductModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editProductModalLabel">Sửa sản phẩm</h1><span class="error-message" style="margin-left:10px"> (*) là trường bắt buộc</span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form #editProductForm="ngForm">
+          <div class="mb-3" style="display: flex;">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="product-name" class="col-form-label">Tên thời trang: <span class="error-message">(*)</span></label>
+                <input required type="text" class="form-control" id="product-name" placeholder="Tên thời trang" [(ngModel)]="this.editP.name" #checkNameEdit = "ngModel" name="checkNameEdit">
+                <div class="error-message" *ngIf="checkNameEdit.invalid&&(checkNameEdit.dirty||checkNameEdit.touched)">
+                    <div *ngIf="checkNameEdit.errors['required']">
+                      <span>Tên là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <label for="product-price" class="col-form-label">Giá sản phẩm:<span class="error-message">(*)</span></label>
+                <input type="number" class="form-control" id="product-price" placeholder="Giá thời trang" required [(ngModel)]="this.editP.price" #checkPriceEdit = "ngModel" name="checkPriceEdit">
+                <div class="error-message" *ngIf="checkPriceEdit.invalid&&(checkPriceEdit.dirty||checkPriceEdit.touched)">
+                    <div *ngIf="checkPriceEdit.errors['required']">
+                      <span>Giá là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="mb-3" style="display: flex;">
+            <div style="flex: 20; margin-right: 10px;">
+                <label for="recipient-name" class="col-form-label">Hình ảnh:<span class="error-message">(*)</span></label>
+                <input type="file" class="d-none" #imgfile (change)="onSelect($event)" name="checkImageEdit" required>
+                <img id="imgPreview" class="form-control img-icon" src="{{this.editP.image}}" alt="" (click)="imgfile.click()">
+                <div class="error-message" *ngIf="!fileSelected && imgfile.files">
+                    <span>Hình ảnh là bắt buộc!</span>
+                </div>
+            </div>
+            <div style="flex: 80;">
+                <label for="message-text" class="col-form-label">Mô tả sản phẩm:<span class="error-message">(*)</span></label>
+                <textarea class="form-control" id="message-text" style="height:150px;"  required [(ngModel)]="this.editP.description" #checkDescriptionEdit = "ngModel" name="checkDescriptionEdit"></textarea>
+                <div class="error-message" *ngIf="checkDescriptionEdit.invalid&&(checkDescriptionEdit.dirty||checkDescriptionEdit.touched)">
+                    <div *ngIf="checkDescriptionEdit.errors['required']">
+                      <span>Mô tả là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="mb-3" style="display: flex;">
+            <div style="flex: 3; margin-right: 10px;">
+                <label for="product-name" class="col-form-label">Tình trạng thời trang:<span class="error-message">(*)</span></label>
+                <input type="text" class="form-control" id="product-name" placeholder="Tình trạng thời trang" required [(ngModel)]="this.editP.condition" #checkConditionEdit = "ngModel" name="checkConditionEdit">
+                <div class="error-message" *ngIf="checkConditionEdit.invalid&&(checkConditionEdit.dirty||checkConditionEdit.touched)">
+                    <div *ngIf="checkConditionEdit.errors['required']">
+                      <span>Tình trạng là bắt buộc!</span>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 3; margin-right: 10px;">
+                <label for="product-name" class="col-form-label">Bảo hành bao lâu:</label>
+                <input type="text" class="form-control" id="product-waranty" placeholder="Thời gian bảo hành" [(ngModel)]="this.editP.waranty" name="checkWarantyEdit">
+            </div>
+            <div style="flex: 1; display: flex; flex-wrap: wrap;">
+                <label for="product-name" class="col-form-label" style="flex-basis: 100%;">Còn hàng:</label>
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" style="width: 20px; height: 20px;" [(ngModel)]="this.editP.featured" name="checkFeaturedEdit">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button [disabled]="!editProductForm.valid||!fileSelected && imgfile.files" type="button" class="btn btn-primary" (click)="editProduct()">Sửa sản phẩm</button>
+      </div>
+    </div>
+  </div>
+</div>

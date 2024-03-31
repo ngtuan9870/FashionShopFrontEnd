@@ -33,8 +33,6 @@ export class CategoriesComponent implements OnInit {
     const file = event.target.files && event.target.files[0];
     if (file) {
         this.fileSelected = true;
-
-        // Handle the file here, e.g., display preview, upload to server, etc.
         const reader = new FileReader();
         reader.onload = (e: any) => {
             document.getElementById('imgPreview').setAttribute('src', e.target.result);

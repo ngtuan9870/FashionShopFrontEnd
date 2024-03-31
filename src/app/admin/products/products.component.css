@@ -2,3 +2,12 @@
     border-radius: 2px;
     margin-right: 5px;
 }
+.img-icon{
+    width: 150px;
+    height: auto;
+    cursor: pointer;
+}
+.error-message{
+    color: red;
+    font-size: 13px;
+}
