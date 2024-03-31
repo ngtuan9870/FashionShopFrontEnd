@@ -1,0 +1,56 @@
+
+<div class="categories-list">
+  <div class="category-item" *ngFor="let c of categories; let i = index">
+    <a routerLink = "../products/{{c.id}}"><img src="{{c.image}}" alt=""></a>
+    <p>{{c.name}}</p>
+  </div>
+  <button type="button" class="btn btn-lg float-btn" data-bs-toggle="modal" data-bs-target="#addCategory">
+    <i class="fas fa-plus"></i>
+  </button>
+</div>
+
+
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addCategoryLabel">Thêm loại quần áo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #addCategoryForm="ngForm">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Tên loại quần áo:(ví dụ Đầm)</label>
+            <input type="text" class="form-control" id="checkName" [(ngModel)]="this.category.name" #checkName="ngModel" required name="checkName">
+            <div class="error-message" *ngIf="checkName.invalid&&(checkName.dirty||checkName.touched)">
+                <div *ngIf="checkName.errors['required']">
+                  <span>Tên loại là bắt buộc!</span>
+                </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Hình ảnh:</label>
+            <input type="file" class="d-none" #imgfile (change)="onSelect($event)" name="checkImage" required>
+            <img id="imgPreview" class="form-control img-icon" src="../../../assets/img/logo.png" alt="" (click)="imgfile.click()">
+            <div class="error-message" *ngIf="!fileSelected && imgfile.files">
+                <span>Hình ảnh là bắt buộc!</span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Mô tả cho loại này:</label>
+            <textarea class="form-control" id="message-text" name="checkDescription"[(ngModel)]="this.category.description" #checkDescription="ngModel" required></textarea>
+            <div class="error-message" *ngIf="checkDescription.invalid&&(checkDescription.dirty||checkDescription.touched)">
+                <div *ngIf="checkDescription.errors['required']">
+                  <span>Mô tả là bắt buộc!</span>
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" [disabled]="!addCategoryForm.valid || !fileSelected && imgfile.files" class="btn btn-primary" (click)="addCategory()">Thêm</button>
+      </div>
+    </div>
+  </div>
+</div>

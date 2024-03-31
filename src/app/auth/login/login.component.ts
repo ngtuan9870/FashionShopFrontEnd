@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     );
   }
   public handResponse(res){
-    this.tokenService.handle(res.access_token);
+    this.tokenService.handle(res.access_token, res.user);
     this.authService.changeAuthStatus(true);
     return this.router.navigateByUrl("/")
   }

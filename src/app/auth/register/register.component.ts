@@ -45,7 +45,7 @@ export class RegisterComponent implements OnInit {
         }
       },
       error=>{
-         console.log("Có lỗi trong quá trình truy xuất dữ liệu!")
+         console.log("Lỗi Server");
       }
     );
   }

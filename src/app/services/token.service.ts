@@ -7,22 +7,23 @@ export class TokenService {
 
   constructor() { }
 
-  public handle(access_token){
-    this.setToken(access_token);
+  public handle(access_token,user){
+    this.setToken(access_token,user);
   }
-  public setToken(access_token){
-    return localStorage.setItem('access_token', access_token);
+  public setToken(access_token,user){
+    return localStorage.setItem('user-info', JSON.stringify({'access_token':access_token,'user':user}));
   }
   public getToken(){
-    return localStorage.getItem('access_token');
+    return localStorage.getItem('user-info');
   }
   public removeToken(){
-    return localStorage.removeItem("access_token");
+    return localStorage.removeItem("user-info");
   }
   public isValidToken(){
     const token = this.getToken();
     if(token){
       const payload = this.payloadToken(token);
+      console.log(payload)
       if(payload){
         return (payload.iss === "http://localhost:8000/api/login")?true:false
       }

@@ -7,6 +7,7 @@
     position: absolute;
     background-color: rgba(0, 0, 0, 0.411);
     display: none;
+    z-index: 10000;
 }
 .loading img{
     position: absolute;
